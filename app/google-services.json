@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "212164657655",
+    "firebase_url": "https://drivers-12061.firebaseio.com",
+    "project_id": "drivers-12061",
+    "storage_bucket": "drivers-12061.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212164657655:android:527b71927c8577d4",
+        "android_client_info": {
+          "package_name": "com.openxoft.drivers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212164657655-alget48h7iqpqr80huppk5d2n737islk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.openxoft.drivers",
+            "certificate_hash": "62b45c44fd7ca2073d86f3f74c04631ff96a9a9b"
+          }
+        },
+        {
+          "client_id": "212164657655-n6tf7fcmnn6vnpnaj6rov2p6hhrdhvnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_sZO7aiof5Lnx7X1ANqKZiNEmeW2SKgU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212164657655-n6tf7fcmnn6vnpnaj6rov2p6hhrdhvnv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
