@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#ff6600</color>
+    <color name="colorPrimaryDark">#b34700</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#f7941e</color>
+    <color name="colorAccent">#FF80AB</color>
+    <color name="footertoolbarbackground">#d6d7d7</color>
+    <color name="orange">#f7941e</color>
+    <color name="white">#ffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparent_black">#7f000000</color>
+    <color name="green">#669900</color>
+    <color name="gray">#F1F2F2</color>
+    <color name="titlered">#990000</color>
 </resources>

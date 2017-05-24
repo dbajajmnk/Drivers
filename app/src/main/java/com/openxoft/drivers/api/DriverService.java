@@ -1,5 +1,7 @@
 package com.openxoft.drivers.api;
 
+import com.openxoft.drivers.mvp.login.model.DriverLoginResponse;
+
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -15,6 +17,6 @@ public interface DriverService {
     @FormUrlEncoded
     @POST(ApiParams.SUB_URL)
     //Call<String> login(@Field(ApiParams.USER_NAME)String username,@Field(ApiParams.PASSWORD)String password);
-    Observable<String>login(@Field(ApiParams.USER_NAME)String username,@Field(ApiParams.PASSWORD)String password);
+    Observable<DriverLoginResponse>login(@Field(ApiParams.USER_NAME)String username, @Field(ApiParams.PASSWORD)String password,@Field(ApiParams.KEY_TAG) String tag);
 
 }

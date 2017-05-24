@@ -66,4 +66,12 @@ public class AppPreferenceData {
         return  sharedPreferences.getLong(key,0);
 
     }
+    public static void clearData(Context context,String fileName)
+    {
+        SharedPreferences sharedPreferences=context.getSharedPreferences(fileName,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+
+    }
 }
