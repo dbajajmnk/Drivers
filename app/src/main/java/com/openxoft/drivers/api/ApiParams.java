@@ -23,11 +23,13 @@ public class ApiParams {
     public static final String TAG_UPDATE_TOKEN="updatemacid";
     public static final String TAG_GET_BOOKING_DETAIL="getbookinghistorybybid";
     public static final String KEY_BID="bid";
+    public static final String KEY_BDID="bdid";
     public static final String KEY_IMAGE="image";
     public static final String KEY_MESSAGE="message";
     public static final String NOTIFICATION_TITLE="Booking Notification";
     public static final String TAG_STATUS ="On Request";
     public static final String KEY_BOOKING_DETAIL ="Booking Detail" ;
+    public static final String KEY_DGB_BBID ="DGB_BDID";
     public static String TAG_TITLE_TA_NUMBER="TA Number";
     public static final String KEY_ENDUSER ="enduser" ;
     public static final String TAG_TEMP_LOGIN ="temp_login";
@@ -38,5 +40,14 @@ public class ApiParams {
     public static final String KEY_TITLE_AMOUNT="Amount: ";
     public static final String KEY_SUPPLIED_BY="Supplied By: ";
     public static final String KEY_BOOKING_ID="Booking Id: ";
+    public static final String KEY_DRIVER_GUIDE_ID="dgid";
+    public static final String KEY_TYPE="type";
+
+
+    //Tags Booking For Drivers
+
+    public static final String TAG_GET_HISTORYWITH2PARAMS="getbookinghistory2params";
+    public static final String TAG_BOOKING_FOR_DRIVERS="getbooking4driver";
+
 
 }

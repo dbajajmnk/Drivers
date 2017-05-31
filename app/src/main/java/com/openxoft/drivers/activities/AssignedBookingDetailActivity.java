@@ -2,24 +2,26 @@ package com.openxoft.drivers.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.openxoft.drivers.R;
 import com.openxoft.drivers.api.ApiParams;
+import com.openxoft.drivers.api.DriverServiceImp;
 import com.openxoft.drivers.customviews.BookingDetailPanel;
-import com.openxoft.drivers.mvp.assignedbookings.model.Booking;
+import com.openxoft.drivers.mvp.assignedbookings.model.DutiesForDriver;
+import com.openxoft.drivers.mvp.assignedbookings.model.Duty;
+import com.openxoft.drivers.mvp.bookingdetail.model.Booking;
+import com.openxoft.drivers.mvp.bookingdetail.model.BookingDetailResponse;
 import com.openxoft.drivers.mvp.bookingdetail.presenter.BookingDetailPresenter;
 import com.openxoft.drivers.mvp.bookingdetail.presenter.BookingDetailPresenterImpl;
 import com.openxoft.drivers.mvp.bookingdetail.view.BookingDetailView;
@@ -46,13 +48,20 @@ public class AssignedBookingDetailActivity extends BaseActivity implements Booki
         imageView = (ImageView) findViewById(R.id.service_image);
         toolbarSetup();
         bookingDetailPresenter = new BookingDetailPresenterImpl(this);
-        Booking booking = getIntent().getExtras().getParcelable(ApiParams.KEY_BOOKING_DETAIL);
-        Log.d("Booking id", booking.getBDBOOKDATE());
-        if (booking != null) {
-            bookingDetailPresenter.validateData(booking);
+        if(getIntent().getExtras()!=null)
+        {
+            String bookingid=getIntent().getExtras().getString(ApiParams.KEY_BID);
+            String dbid=getIntent().getExtras().getString(ApiParams.KEY_BDID);
+            Log.d("Bid",bookingid);
+            Log.d("BDid",dbid);
+            DriverServiceImp.getDutyDetail(this,bookingid,dbid,bookingDetailPresenter);
         }
 
+
+
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -61,15 +70,17 @@ public class AssignedBookingDetailActivity extends BaseActivity implements Booki
 
     @Override
     public void setOnError() {
+        Toast.makeText(this,"Sorry No Detail Found ",Toast.LENGTH_LONG).show();
+        finish();
 
     }
 
     @Override
-    public void setOnSuccess(Booking booking) {
+    public void setOnSuccess(BookingDetailResponse booking) {
 
 
         Log.d("I am in Success", "Success");
-        fillData(booking);
+        fillData(booking.getData().get(0));
 
     }
 
@@ -79,7 +90,7 @@ public class AssignedBookingDetailActivity extends BaseActivity implements Booki
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.mainPanel);
         Glide.with(AssignedBookingDetailActivity.this).load(booking.getSERVICESIMGPATH()).into(imageView);
 
-        String bookingDescription = ApiParams.KEY_BOOKING_ID + String.valueOf(booking.getBDBOOKINGID()) +
+        String bookingDescription = ApiParams.KEY_BOOKING_ID + String.valueOf(booking.getPICKUPDETAILS()) +
                 "\n" + booking.getSERVICE() +
                 "\n" + ApiParams.KEY_TITLE_STATUS + booking.getBDSTATUS() +
                 "\n" + ApiParams.KEY_TITLE_PAX + "(" + booking.getPax() + ")" + ": " + booking.getPAXNAME() +
@@ -87,10 +98,10 @@ public class AssignedBookingDetailActivity extends BaseActivity implements Booki
                 "\n" + ApiParams.KEY_SUPPLIED_BY + booking.getSUPCompany();
 
         BookingDetailPanel bookingDetailPanel = new BookingDetailPanel(AssignedBookingDetailActivity.this, getString(R.string.titlebookingdetail), bookingDescription, false);
-        BookingDetailPanel bookingDetailPanel2 = new BookingDetailPanel(AssignedBookingDetailActivity.this, getString(R.string.description), booking.getSLGDESCRIPTION(), true);
+
 
         BookingDetailPanel bookingDetailPanel3 = new BookingDetailPanel(AssignedBookingDetailActivity.this, getString(R.string.Remarks), booking.getSLGREMARK(), false);
-        BookingDetailPanel bookingDetailPanel4 = new BookingDetailPanel(AssignedBookingDetailActivity.this, getString(R.string.policy), booking.getCANCELLATIONPOLICY(), false);
+
         BookingDetailPanel dropoffPanel = new BookingDetailPanel(AssignedBookingDetailActivity.this, getString(R.string.dropoffdetails), booking.getDROPOFFDETAILS(), false);
         BookingDetailPanel pickupdetail = new BookingDetailPanel(AssignedBookingDetailActivity.this, getString(R.string.pickupdetails), booking.getPICKUPDETAILS(), false);
         linearLayout.addView(bookingDetailPanel.getView());
@@ -101,11 +112,11 @@ public class AssignedBookingDetailActivity extends BaseActivity implements Booki
         if (!booking.getDROPOFFDETAILS().isEmpty()) {
             linearLayout.addView(dropoffPanel.getView());
         }
-        linearLayout.addView(bookingDetailPanel2.getView());
+
         if (!booking.getSLGREMARK().isEmpty()) {
             linearLayout.addView(bookingDetailPanel3.getView());
         }
-        linearLayout.addView(bookingDetailPanel4.getView());
+
 
 
     }

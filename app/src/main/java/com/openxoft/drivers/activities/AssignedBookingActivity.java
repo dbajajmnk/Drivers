@@ -2,32 +2,32 @@ package com.openxoft.drivers.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
 import com.openxoft.drivers.R;
 
 import com.openxoft.drivers.adapter.BookingAdapter;
 import com.openxoft.drivers.api.ApiParams;
+import com.openxoft.drivers.api.DriverServiceImp;
 import com.openxoft.drivers.listener.BookingInterface;
-import com.openxoft.drivers.mvp.assignedbookings.model.Booking;
-import com.openxoft.drivers.mvp.assignedbookings.model.DriveLoginResponse;
+import com.openxoft.drivers.mvp.assignedbookings.model.DutiesForDriver;
+import com.openxoft.drivers.mvp.assignedbookings.model.Duty;
 import com.openxoft.drivers.mvp.assignedbookings.presenter.AssignedBookingPresenter;
 import com.openxoft.drivers.mvp.assignedbookings.presenter.AssingedBookingPresenterImpl;
 import com.openxoft.drivers.mvp.assignedbookings.view.AssignedBookingListView;
 
 import com.openxoft.drivers.mvp.login.model.DriverLoginResponse;
+import com.openxoft.drivers.mvp.login.model.User;
 import com.openxoft.drivers.util.AlertUtil;
+import com.openxoft.drivers.util.AppPreferenceData;
 import com.openxoft.drivers.util.JsonUtil;
 
 import java.util.List;
@@ -36,13 +36,18 @@ import java.util.List;
  * Created by openxoft on 19/05/17.
  */
 
-public class AssignedBookingActivity extends BaseActivity implements AssignedBookingListView, BookingInterface {
+public class AssignedBookingActivity extends BaseActivity implements  BookingInterface,AssignedBookingListView {
 
 
-    AssignedBookingPresenter assignedBookingPresenter;
+
     RecyclerView recyclerView;
-    BookingAdapter bookingAdapter;
-    List<Booking> bookingList;
+    BookingAdapter dutiesAdapter;
+    List<Duty> bookingList;
+
+  AssignedBookingPresenter assignedBookingPresenter;
+
+
+
 
 
     @Override
@@ -50,21 +55,26 @@ public class AssignedBookingActivity extends BaseActivity implements AssignedBoo
         return R.layout.activity_assignedbookinglist;
     }
 
+
+
     @Override
     protected void onViewReady(Bundle bundle, Intent intent) {
         super.onViewReady(bundle, intent);
         initViews();
-        assignedBookingPresenter = new AssingedBookingPresenterImpl(this);
-        String jsonData = JsonUtil.loadJsonFromAsset("document.json", this);
-        if (jsonData != null) {
+        assignedBookingPresenter=new AssingedBookingPresenterImpl(this);
+        DriverLoginResponse driverLoginResponse= new Gson().fromJson(AppPreferenceData.getString(this,ApiParams.TAG_DRIVER_LOGIN,ApiParams.TAG_DRIVER_LOGIN),DriverLoginResponse.class);
+        User user=driverLoginResponse.getData().get(0);
+        DriverServiceImp.getValues(this,user.getDGID().toString(),user.getDGTYPE());
 
-            DriveLoginResponse driveLoginResponse = new Gson().fromJson(JsonUtil.loadJsonFromAsset("document.json", this), DriveLoginResponse.class);
-            assignedBookingPresenter.loadData(driveLoginResponse);
 
-        }
+
+
+
+
 
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -78,27 +88,19 @@ public class AssignedBookingActivity extends BaseActivity implements AssignedBoo
 
     }
 
-    private void fillData(DriveLoginResponse driveLoginResponse) {
-        bookingList = driveLoginResponse.getData();
-        bookingAdapter = new BookingAdapter(bookingList);
-        recyclerView.setAdapter(bookingAdapter);
+    private void fillData(DutiesForDriver dutiesForDriver) {
+        bookingList = dutiesForDriver.getData();
+        dutiesAdapter = new BookingAdapter(bookingList);
+        recyclerView.setAdapter(dutiesAdapter);
     }
 
-    @Override
-    public void setOnGetData(DriveLoginResponse driveLoginResponse) {
-        fillData(driveLoginResponse);
-
+    public void validateData(DutiesForDriver dutiesForDriver)
+    {
+        assignedBookingPresenter.loadData(dutiesForDriver);
     }
 
-    @Override
-    public void setOnServerError() {
 
-    }
 
-    @Override
-    public void setOnEmptyResponseError() {
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -111,9 +113,12 @@ public class AssignedBookingActivity extends BaseActivity implements AssignedBoo
 
     @Override
     public void onViewDetail(int position) {
+        Duty duty=bookingList.get(position);
         Intent intent = new Intent(AssignedBookingActivity.this, AssignedBookingDetailActivity.class);
-        intent.putExtra(ApiParams.KEY_BOOKING_DETAIL, bookingList.get(position));
+        intent.putExtra(ApiParams.KEY_BID,duty.getBID().toString());
+        intent.putExtra(ApiParams.KEY_BDID,duty.getDGBBDID().toString());
         startActivity(intent);
+
 
     }
 
@@ -121,5 +126,25 @@ public class AssignedBookingActivity extends BaseActivity implements AssignedBoo
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
+    }
+
+
+    @Override
+    public void setOnGetData(DutiesForDriver driveLoginResponse) {
+        fillData(driveLoginResponse);
+
+    }
+
+    @Override
+    public void setOnServerError() {
+        Log.d("Error","Error on Server");
+
+    }
+
+    @Override
+    public void setOnEmptyResponseError() {
+
+        Log.d("Emapty Response","Blank Response");
+
     }
 }

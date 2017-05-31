@@ -37,7 +37,11 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
+        <service android:name=".services.RouteService" android:enabled="true" android:exported="false"/>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ba1e7eae4bbbf002e2763e534f2cadc4c8812fe4" />
     </application>
 
 </manifest>

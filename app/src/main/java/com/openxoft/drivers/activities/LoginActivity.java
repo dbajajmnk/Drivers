@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -48,7 +49,7 @@ public class LoginActivity extends BaseActivity implements LoginView{
 
         forgot=(TextView)findViewById(R.id.txt_forgotpassword);
         loginPresenter=new LoginPresenterImpl(this);
-        Log.d("Device Token", FirebaseInstanceId.getInstance().getToken());
+        //Log.d("Device Token", FirebaseInstanceId.getInstance().getToken());
         username=(EditText)findViewById(R.id.et_username);
         password=(EditText)findViewById(R.id.et_password);
         forgot.setOnClickListener(this);
@@ -70,15 +71,7 @@ public class LoginActivity extends BaseActivity implements LoginView{
         }
 
     }
-    private void toolbarSetup() {
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Login Detail");
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-
-    }
 
     private void callForgotActivity()
     {
@@ -107,9 +100,25 @@ public class LoginActivity extends BaseActivity implements LoginView{
     }
    public  void callAssignedBookingAndSaveUserData(DriverLoginResponse driverLoginResponse)
     {
-        String data=new Gson().toJson(driverLoginResponse,DriverLoginResponse.class);
-        AppPreferenceData.saveStringData(this, ApiParams.TAG_DRIVER_LOGIN,ApiParams.TAG_DRIVER_LOGIN,data);
-        AppPreferenceData.saveStringData(this,ApiParams.TAG_TEMP_LOGIN,ApiParams.TAG_TEMP_LOGIN,data);
-        startActivity(new Intent(this,AssignedBookingActivity.class));
+        if(driverLoginResponse!=null)
+        {
+             if( driverLoginResponse.getCode().equalsIgnoreCase("1"))
+            {
+                String data=new Gson().toJson(driverLoginResponse,DriverLoginResponse.class);
+                AppPreferenceData.saveStringData(this, ApiParams.TAG_DRIVER_LOGIN,ApiParams.TAG_DRIVER_LOGIN,data);
+                AppPreferenceData.saveStringData(this,ApiParams.TAG_TEMP_LOGIN,ApiParams.TAG_TEMP_LOGIN,data);
+                startActivity(new Intent(this,AssignedBookingActivity.class));
+                finish();
+            }
+            else
+                {
+                 Toast.makeText(this,driverLoginResponse.getResponse(),Toast.LENGTH_LONG).show();
+             }
+        }
+
+        else
+        {
+            Toast.makeText(this,"Sorry There is Problem on Server",Toast.LENGTH_LONG).show();
+        }
     }
 }

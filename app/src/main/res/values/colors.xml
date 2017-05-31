@@ -14,4 +14,8 @@
     <color name="green">#669900</color>
     <color name="gray">#F1F2F2</color>
     <color name="titlered">#990000</color>
+
+    <color name="view_bg">#b20e0f</color>
+
+    <color name="btn_bg">#3e4a56</color>
 </resources>
